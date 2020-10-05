@@ -18,6 +18,7 @@
 #include "src/model.h" // defines the Model class
 #include "src/text.h" // defines the Text class
 #include "src/shapes.h" // defines Shape classes
+#include "src/collision.h" // defines some collision functions
 
 // declaring some global variables before main
 Camera camera(glm::vec3(-2.0, 1.0, -2.0), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f);
@@ -179,7 +180,8 @@ int main()
 		{
 			sphere.Velocity += glm::normalize(sphere.Position - camera.CameraPosition) * 0.005f;
 		}
-		sphere.PassFrame(tris);
+		handleIntersection(sphere, tris, sphere.Position, sphere.Velocity);
+		
 		glm::mat4 modelSphere = glm::mat4(1.0f);
 
 		modelSphere = glm::translate(modelSphere, sphere.Position);

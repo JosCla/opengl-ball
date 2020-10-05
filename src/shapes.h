@@ -25,7 +25,7 @@ class Triangle
 		Triangle(glm::vec3, glm::vec3, glm::vec3);
 		Triangle(glm::vec3, glm::vec3, glm::vec3, glm::vec3);
 
-		void PrintTriangle();
+		void Print();
 };
 
 // Ellipsoid class. Used for objects which collide with level geometry
@@ -39,7 +39,7 @@ class Ellipsoid
 
 		Ellipsoid(float, glm::vec3, glm::vec3);
 
-		void PassFrame(std::vector<Triangle>&);
+		void Print();
 };
 
 #endif

@@ -17,7 +17,14 @@ class Player
 	// pass frame function
 	// render player?
 	public:
-		Player(glm::vec3, glm::vec3);
+		Player(glm::vec3 position, glm::vec3 direction) {
+			this.Position = position;
+			this.Direction = direction;
+		}
+
+		void PassFrame() {
+			std::cout << "bruh moment" << endl;
+		}
 
 	// position, direction, velocity
 	// camera

@@ -36,11 +36,11 @@ bool pointInsideTriangle(const Triangle &tri, const glm::vec3 &point)
 // finds the time and point at which ellipsoid intersects with a triangle
 // returns whether or not an intersection happens
 // based on http://www.peroxide.dk/papers/collision/collision.pdf
-bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &collisionTime, glm::vec3 &collisionPoint)
+bool computeIntersection(const Ellipsoid &ellip, const glm::vec3& pos, const glm::vec3& vel, const Triangle &tri, float &collisionTime, glm::vec3 &collisionPoint)
 {
 	float EPSILON = 0.00001;
-	float baseDistToPlane = signedDistanceToPlane(tri, ellip.Position);
-	float normDotVel = glm::dot(tri.Normal, ellip.Velocity);
+	float baseDistToPlane = signedDistanceToPlane(tri, pos);
+	float normDotVel = glm::dot(tri.Normal, vel);
 
 	// back face culling
 	if (normDotVel > 0)
@@ -99,7 +99,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &col
 	if (!embedded)
 	{
 		// checking if intersection point is in triangle
-		glm::vec3 intersectionPoint = ellip.Position - tri.Normal + (t0 * ellip.Velocity);
+		glm::vec3 intersectionPoint = pos - tri.Normal + (t0 * vel);
 		if (t0 >= 0 && t0 < 1 && pointInsideTriangle(tri, intersectionPoint))
 		{
 			collision = true;
@@ -119,9 +119,9 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &col
 		{
 			// solving for when the squared distance between the center of the sphere and
 			// the vertex equals one yields the following quadratic equation
-			double a = glm::dot(ellip.Velocity, ellip.Velocity);
-			double b = 2.0f * glm::dot(ellip.Velocity, (ellip.Position - tri.Vertices[i]));
-			double c = std::pow(glm::length(tri.Vertices[i] - ellip.Position), 2) - 1.0f;
+			double a = glm::dot(vel, vel);
+			double b = 2.0f * glm::dot(vel, (pos - tri.Vertices[i]));
+			double c = std::pow(glm::length(tri.Vertices[i] - pos), 2) - 1.0f;
 
 			double r0, r1;
 			if (solveQuadrat(a, b, c, r0, r1))
@@ -143,12 +143,12 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &col
 		for (unsigned int i = 0; i < 3; ++i)
 		{
 			glm::vec3 currEdge = tri.Vertices[(i+1)%3] - tri.Vertices[i];
-			glm::vec3 posToVertex = tri.Vertices[i] - ellip.Position;
+			glm::vec3 posToVertex = tri.Vertices[i] - pos;
 			double edgeLenSquared = glm::length(currEdge) * glm::length(currEdge);
-			double velLenSquared = glm::length(ellip.Velocity) * glm::length(ellip.Velocity);
+			double velLenSquared = glm::length(vel) * glm::length(vel);
 			double posToVertLenSquared = glm::length(posToVertex) * glm::length(posToVertex);
-			double edgeDotVel = glm::dot(currEdge, ellip.Velocity);
-			double posToVertDotVel = glm::dot(posToVertex, ellip.Velocity);
+			double edgeDotVel = glm::dot(currEdge, vel);
+			double posToVertDotVel = glm::dot(posToVertex, vel);
 			double edgeDotPosToVert = glm::dot(currEdge, posToVertex);
 
 			// process for determining when distance between sphere's center and the edge
@@ -164,7 +164,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &col
 				if (time < 0 && time >= -0.01)
 					time = 0; // helps mitigate false negatives from calculation imprecision 
 				
-				double relativePosOnEdge = ((float)time * glm::dot(currEdge, ellip.Velocity) - glm::dot(currEdge, posToVertex)) / std::pow(glm::length(currEdge), 2);
+				double relativePosOnEdge = ((float)time * glm::dot(currEdge, vel) - glm::dot(currEdge, posToVertex)) / std::pow(glm::length(currEdge), 2);
 
 				if (relativePosOnEdge > 0 && relativePosOnEdge < 1)
 				{
@@ -185,10 +185,10 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &tri, float &col
 }
 
 // function overload for inputting vertices instead of a triangle
-bool computeIntersection(const Ellipsoid &ellip, const glm::vec3 &vert0, const glm::vec3 &vert1, const glm::vec3 &vert2, float &collisionTime, glm::vec3 &collisionPoint)
+bool computeIntersection(const Ellipsoid &ellip, const glm::vec3 &pos, const glm::vec3 &vel, const glm::vec3 &vert0, const glm::vec3 &vert1, const glm::vec3 &vert2, float &collisionTime, glm::vec3 &collisionPoint)
 {
 	Triangle tri(vert0, vert1, vert2);
-	return computeIntersection(ellip, tri, collisionTime, collisionPoint);
+	return computeIntersection(ellip, pos, vel, tri, collisionTime, collisionPoint);
 }
 
 void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tris, glm::vec3 &pos, glm::vec3 &vel) 
@@ -208,7 +208,7 @@ void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tri
 		{
 			float currCollisionTime;
 			glm::vec3 currCollisionPoint;
-			if (computeIntersection(ellip, tris[i], currCollisionTime, currCollisionPoint))
+			if (computeIntersection(ellip, pos, vel, tris[i], currCollisionTime, currCollisionPoint))
 			{
 				// the second part of the following if-statement makes sure that the ellipsoid
 				// will not get stuck repeatedly colliding with something at time = 0

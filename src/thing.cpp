@@ -7,22 +7,24 @@
 using namespace std;
 
 // libraries
-#include <glm/gtc/type_ptr.hpp> // for glm types
+#include <glm/glm.hpp> // gl maths
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 // our files
 #include "thing.h" // for Thing declaration
 #include "model.h" // for Model class
 #include "shapes.h" // for Ellipsoid class
 #include "collision.h" // for collision utilities
+#include "camera.h" // for Camera class
+#include "shader.h" // for Shader class
 
 // Thing Class 
-// TODO: add another argument to constructor as the path to the model
-// TODO: add some way of initializing Hitbox
-Thing::Thing(glm::vec3 position, glm::vec3 velocity, string name) : Hitbox(1.0, glm::vec3(0.0), glm::vec3(0.0)) {
+Thing::Thing(glm::vec3 position, glm::vec3 velocity, float radius, string modelFilepath, string name) : Hitbox(radius, glm::vec3(0.0f), glm::vec3(0.0f)), ThingModel(modelFilepath.c_str()) {
 	Position = position;
 	Velocity = velocity;
+
 	Name = name;
-	//Hitbox = Ellipsoid(glm::vec3(0.0), glm::vec3(0.0), glm::vec3(0.0));
 }
 
 // Computes the movement of the Thing over a single frame
@@ -31,10 +33,23 @@ void Thing::PassFrame(vector<Triangle>& tris) {
 	handleIntersection(Hitbox, tris, Position, Velocity);
 
 	// Adding gravity and friction after handling intersections
-	Velocity += glm::vec3(0.0, -0.001, 0.0);
-	Velocity *= 0.99;
+	Velocity += glm::vec3(0.0f, -0.001f, 0.0f);
+	Velocity *= 0.99f;
 }
 
-void Thing::RenderThing() {
-	cout << "hey!!! not finished!!! please finish!!!" << endl;
+// Renders the Thing
+void Thing::RenderThing(Camera &camera, Shader &shader, int SCR_WIDTH, int SCR_HEIGHT) {
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, Position);
+
+	glm::mat4 view = camera.GetViewMatrix();
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+	shader.use();
+	shader.setMat4("model", model);
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+
+	ThingModel.Draw(shader);
 }

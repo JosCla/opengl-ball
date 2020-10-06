@@ -19,6 +19,7 @@
 #include "src/text.h" // defines the Text class
 #include "src/shapes.h" // defines Shape classes
 #include "src/collision.h" // defines some collision functions
+#include "src/thing.h" // defines the Thing class
 
 // declaring some global variables before main
 Camera camera(glm::vec3(-2.0, 1.0, -2.0), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f);
@@ -91,9 +92,12 @@ int main()
 	std::vector<Triangle> tris = ourModel.ToTriangles();
 
 	// another model
+	/*
 	std::string filepath2 = "resources/boxsphere/boxsphere.obj";
 	Model sphereModel(filepath2.c_str());
 	Ellipsoid sphere(1.0f, glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	*/
+	Thing sphere(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f), 1.0f, "resources/boxsphere/boxsphere.obj", "testsphere");
 
 	// the text
 	Text sampleText("hello there, world!", SCR_WIDTH, SCR_HEIGHT, 30, 30, 400, 20, 5);
@@ -180,6 +184,7 @@ int main()
 		{
 			sphere.Velocity += glm::normalize(sphere.Position - camera.CameraPosition) * 0.005f;
 		}
+		/*
 		handleIntersection(sphere, tris, sphere.Position, sphere.Velocity);
 		
 		glm::mat4 modelSphere = glm::mat4(1.0f);
@@ -189,6 +194,9 @@ int main()
 		objectShader.setMat4("model", modelSphere);
 
 		sphereModel.Draw(objectShader);
+		*/
+		sphere.PassFrame(tris);
+		sphere.RenderThing(camera, objectShader, SCR_WIDTH, SCR_HEIGHT);
 
 		// drawing text
 		sampleText.DrawText(textShader);

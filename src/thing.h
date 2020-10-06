@@ -13,6 +13,8 @@
 // our files
 #include "model.h" // for Model class
 #include "shapes.h" // for Ellipsoid and Triangle class 
+#include "camera.h" // for Camera class
+#include "shader.h" // for Shader class
 
 // Thing class
 class Thing {
@@ -20,14 +22,14 @@ class Thing {
 		glm::vec3 Position;
 		glm::vec3 Velocity;
 		std::string Name;
-		
-		Ellipsoid Hitbox;
-		//Model ThingModel;
 
-		Thing(glm::vec3, glm::vec3, std::string="");
+		Ellipsoid Hitbox;
+		Model ThingModel;
+		
+		Thing(glm::vec3, glm::vec3, float, std::string, std::string="");
 
 		void PassFrame(std::vector<Triangle>&);
-		void RenderThing();
+		void RenderThing(Camera&, Shader&, int, int);
 };
 
 #endif

@@ -20,9 +20,10 @@ using namespace std;
 #include "shader.h" // for Shader class
 
 // Thing Class 
-Thing::Thing(glm::vec3 position, glm::vec3 velocity, float radius, string modelFilepath, string name) : Hitbox(radius, glm::vec3(0.0f), glm::vec3(0.0f)), ThingModel(modelFilepath.c_str()) {
+Thing::Thing(glm::vec3 position, glm::vec3 velocity, glm::vec3 scale, glm::vec3 radii, string modelFilepath, string name) : Hitbox(radii, glm::vec3(0.0f), glm::vec3(0.0f)), ThingModel(modelFilepath.c_str()) {
 	Position = position;
 	Velocity = velocity;
+	Scale = scale;
 
 	Name = name;
 }
@@ -41,6 +42,7 @@ void Thing::PassFrame(vector<Triangle>& tris) {
 void Thing::RenderThing(Camera &camera, Shader &shader, int SCR_WIDTH, int SCR_HEIGHT) {
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, Position);
+	model = glm::scale(model, Scale);
 
 	glm::mat4 view = camera.GetViewMatrix();
 

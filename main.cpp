@@ -97,7 +97,7 @@ int main()
 	Model sphereModel(filepath2.c_str());
 	Ellipsoid sphere(1.0f, glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	*/
-	Thing sphere(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f), 1.0f, "resources/boxsphere/boxsphere.obj", "testsphere");
+	Thing sphere(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f), glm::vec3(2.5f), glm::vec3(1.0f), "resources/boxsphere/boxsphere.obj", "testsphere");
 
 	// the text
 	Text sampleText("hello there, world!", SCR_WIDTH, SCR_HEIGHT, 30, 30, 400, 20, 5);
@@ -114,7 +114,7 @@ int main()
 	};
 
 	DirectionalLight dirLights[] = {
-    DirectionalLight(glm::vec3(-1.0f, -1.0f, 0.3f), lightColor * 0.1f, lightColor * 0.0f, lightColor * 0.0f)
+    DirectionalLight(glm::vec3(-1.0f, -1.0f, 0.3f), lightColor * 0.5f, lightColor * 0.0f, lightColor * 0.0f)
 	};
 
 	SpotLight spotLights[] = {
@@ -173,7 +173,7 @@ int main()
 		objectShader.setMat4("projection", projection);
 
     // background
-    glClearColor(0.03f, 0.03f, 0.03f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// drawing environment

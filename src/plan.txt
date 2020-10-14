@@ -1,20 +1,21 @@
 collision.cpp:
-compute intersection between ellipsoid and single triangle, return collision bool, modify references to position and time
-compute intersection between ellipsoid and many triangles, modify references to position and velocity
+(done) compute intersection between ellipsoid and single triangle, return collision bool, modify references to position and time
+(done) compute intersection between ellipsoid and many triangles, modify references to position and velocity
 
 shapes.cpp:
-ellipsoid no longer has passframe stuff, just stores radii, maybe a print function
-same with triangle, but it never had passframe stuff in the first place
+(done) ellipsoid no longer has passframe stuff, just stores radii, maybe a print function
+ellipsoid should also have some function for transforming coordinates to ellipsoid-space
+(done) same with triangle, but it never had passframe stuff in the first place
 
 thing.cpp:
 has Thing class which stores an object
 think i might want to build it sort of like terraria tmodloader stuff
 anyways, each Thing has:
-position, velocity, rotation, etc.
-hitbox: ellipsoid (or maybe some other shape sometime)
-render thing: model, maybe function tied to model
-pass frame: some function which passes that good frame
-name?: maybe the name of the object
+(done) position, velocity, rotation, etc.
+(done) hitbox: ellipsoid (or maybe some other shape sometime)
+(done) render thing: model, maybe function tied to model
+(done) pass frame: some function which passes that good frame
+(done) name?: maybe the name of the object
 print?: some sorta print function perhaps
 
 player.cpp (future stuff):

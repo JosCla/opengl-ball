@@ -21,12 +21,13 @@ class Thing {
 	public:
 		glm::vec3 Position;
 		glm::vec3 Velocity;
+		glm::vec3 Scale;
 		std::string Name;
 
 		Ellipsoid Hitbox;
 		Model ThingModel;
 		
-		Thing(glm::vec3, glm::vec3, float, std::string, std::string="");
+		Thing(glm::vec3, glm::vec3, glm::vec3, glm::vec3, std::string, std::string="");
 
 		void PassFrame(std::vector<Triangle>&);
 		void RenderThing(Camera&, Shader&, int, int);

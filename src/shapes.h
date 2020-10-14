@@ -33,13 +33,18 @@ class Triangle
 class Ellipsoid
 {
 	public:
-		float Radius;
+		glm::vec3 Radii;
 		glm::vec3 Position;
 		glm::vec3 Velocity;
 
-		Ellipsoid(float, glm::vec3, glm::vec3);
+		Ellipsoid(glm::vec3, glm::vec3, glm::vec3);
 
 		void Print();
+
+		glm::vec3 toEllipSpace(const glm::vec3&);
+		glm::vec3 fromEllipSpace(const glm::vec3&);
+		Triangle toEllipSpace(const Triangle&);
+		Triangle fromEllipSpace(const Triangle&);
 };
 
 #endif

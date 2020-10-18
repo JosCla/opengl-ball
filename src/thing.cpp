@@ -31,7 +31,11 @@ Thing::Thing(glm::vec3 position, glm::vec3 velocity, glm::vec3 scale, glm::vec3 
 // Computes the movement of the Thing over a single frame
 void Thing::PassFrame(vector<Triangle>& tris) {
 	// Handling intersections with terrain
-	handleIntersection(Hitbox, tris, Position, Velocity);
+	Hitbox.Position = Position;
+	Hitbox.Velocity = Velocity;
+	handleIntersection(Hitbox, tris);
+	Position = Hitbox.Position;
+	Velocity = Hitbox.Velocity;
 
 	// Adding gravity and friction after handling intersections
 	Velocity += glm::vec3(0.0f, -0.001f, 0.0f);

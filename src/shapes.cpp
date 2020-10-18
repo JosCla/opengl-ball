@@ -34,7 +34,7 @@ Triangle::Triangle(glm::vec3 vert0, glm::vec3 vert1, glm::vec3 vert2, glm::vec3 
 }
 
 // Prints the Triangle's vertices to std::cout
-void Triangle::Print()
+void Triangle::Print() const
 {
 	for (unsigned int i = 0; i < 3; ++i)
 	{
@@ -56,7 +56,7 @@ Ellipsoid::Ellipsoid(glm::vec3 radii, glm::vec3 position, glm::vec3 velocity)
 }
 
 // Prints the Ellipsoid to std::cout
-void Ellipsoid::Print() 
+void Ellipsoid::Print() const 
 {
 	std::cout << "Radii: " << Radii[0] << ", " << Radii[1] << ", " << Radii[2] << " | ";
 	std::cout << "Position: (" << Position[0] << ", " << Position[1] << ", " << Position[2] << ") | ";
@@ -64,21 +64,21 @@ void Ellipsoid::Print()
 }
 
 // Converts a 3D point into Ellipsoid space - a space squished the proper amount in each dimension to make the ellipsoid into a unit sphere
-glm::vec3 Ellipsoid::toEllipSpace(const glm::vec3 &point) {
-	return ((point - Position) / Radii) + Position;
+glm::vec3 Ellipsoid::toEllipSpace(const glm::vec3 &point) const {
+	return point / Radii;
 }
 
 // Converts a 3D point back from Ellipsoid space
-glm::vec3 Ellipsoid::fromEllipSpace(const glm::vec3 &point) {
-	return ((point - Position) * Radii) + Position;
+glm::vec3 Ellipsoid::fromEllipSpace(const glm::vec3 &point) const {
+	return point * Radii;
 }
 
 // Converts a Triangle into Ellipsoid space
-Triangle Ellipsoid::toEllipSpace(const Triangle &tri) {
+Triangle Ellipsoid::toEllipSpace(const Triangle &tri) const {
 	return Triangle(toEllipSpace(tri.Vertices[0]), toEllipSpace(tri.Vertices[1]), toEllipSpace(tri.Vertices[2]));
 }
 
 // Converts a Triangle from Ellipsoid space
-Triangle Ellipsoid::fromEllipSpace(const Triangle &tri) {
+Triangle Ellipsoid::fromEllipSpace(const Triangle &tri) const {
 	return Triangle(fromEllipSpace(tri.Vertices[0]), fromEllipSpace(tri.Vertices[1]), fromEllipSpace(tri.Vertices[2]));
 }

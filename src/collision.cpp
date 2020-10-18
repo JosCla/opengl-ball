@@ -36,9 +36,17 @@ bool pointInsideTriangle(const Triangle &tri, const glm::vec3 &point)
 // finds the time and point at which ellipsoid intersects with a triangle
 // returns whether or not an intersection happens
 // based on http://www.peroxide.dk/papers/collision/collision.pdf
-bool computeIntersection(const Ellipsoid &ellip, const glm::vec3& pos, const glm::vec3& vel, const Triangle &tri, float &collisionTime, glm::vec3 &collisionPoint)
+bool computeIntersection(const Ellipsoid &ellip, const Triangle &triangle, float &collisionTime, glm::vec3 &slidingPlaneNormal)
 {
+	// defining constants
 	float EPSILON = 0.00001;
+
+	// converting everything to ellipsoid space
+	glm::vec3 pos = ellip.toEllipSpace(ellip.Position);
+	glm::vec3 vel = ellip.toEllipSpace(ellip.Velocity);
+	Triangle tri = ellip.toEllipSpace(triangle);
+
+	// detecting whether the ellipsoid could even have a collision
 	float baseDistToPlane = signedDistanceToPlane(tri, pos);
 	float normDotVel = glm::dot(tri.Normal, vel);
 
@@ -93,7 +101,7 @@ bool computeIntersection(const Ellipsoid &ellip, const glm::vec3& pos, const glm
 	// defining some variables to set as collisions are detected
 	bool collision = false;
 	collisionTime = 1.0f;
-	collisionPoint = glm::vec3(0.0f);
+	glm::vec3 collisionPoint = glm::vec3(0.0f);
 
 	// proceeding with face intersection test:
 	if (!embedded)
@@ -181,17 +189,22 @@ bool computeIntersection(const Ellipsoid &ellip, const glm::vec3& pos, const glm
 		}
 	}
 
+	if (collision) {
+		slidingPlaneNormal = (pos + (vel * collisionTime)) - collisionPoint; 
+		slidingPlaneNormal = ellip.fromEllipSpace(slidingPlaneNormal);
+	}
+
 	return collision;
 }
 
 // function overload for inputting vertices instead of a triangle
-bool computeIntersection(const Ellipsoid &ellip, const glm::vec3 &pos, const glm::vec3 &vel, const glm::vec3 &vert0, const glm::vec3 &vert1, const glm::vec3 &vert2, float &collisionTime, glm::vec3 &collisionPoint)
+bool computeIntersection(const Ellipsoid &ellip, const glm::vec3 &vert0, const glm::vec3 &vert1, const glm::vec3 &vert2, float &collisionTime, glm::vec3 &slidingPlaneNormal)
 {
 	Triangle tri(vert0, vert1, vert2);
-	return computeIntersection(ellip, pos, vel, tri, collisionTime, collisionPoint);
+	return computeIntersection(ellip, tri, collisionTime, slidingPlaneNormal);
 }
 
-void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tris, glm::vec3 &pos, glm::vec3 &vel) 
+void handleIntersection(Ellipsoid &ellip, const std::vector<Triangle> &tris) 
 {
 	float EPSILON = 0.00001f;
 	float totalTimePassed = 0.0f;
@@ -201,22 +214,22 @@ void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tri
 	{
 		bool collision;
 		float collisionTime = 1.0f;
-		glm::vec3 collisionPoint;
+		glm::vec3 slidingPlaneNormal;
 
 		// TODO: make an octree or something. anything to make this more efficient
 		for (unsigned int i = 0; i < tris.size(); ++i)
 		{
 			float currCollisionTime;
-			glm::vec3 currCollisionPoint;
-			if (computeIntersection(ellip, pos, vel, tris[i], currCollisionTime, currCollisionPoint))
+			glm::vec3 currSlidingPlane;
+			if (computeIntersection(ellip, tris[i], currCollisionTime, currSlidingPlane))
 			{
 				// the second part of the following if-statement makes sure that the ellipsoid
 				// will not get stuck repeatedly colliding with something at time = 0
-				if (currCollisionTime < collisionTime && std::abs(glm::dot(vel, pos + (vel * currCollisionTime) - currCollisionPoint)) > EPSILON)
+				if (currCollisionTime < collisionTime && std::abs(glm::dot(ellip.Velocity, currSlidingPlane)) > EPSILON)
 				{
 					collision = true;
 					collisionTime = currCollisionTime;
-					collisionPoint = currCollisionPoint;
+					slidingPlaneNormal = currSlidingPlane;
 				}
 			}
 		}
@@ -225,18 +238,16 @@ void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tri
 		// we've passed the entire frame
 		if (collision && collisionTime < (1.0f - totalTimePassed))
 		{
-			pos += (vel * collisionTime);
+			ellip.Position += (ellip.Velocity * collisionTime);
 
-			glm::vec3 slidingPlaneNormal = pos - collisionPoint;
-
-			glm::vec3 projection = glm::dot(vel, glm::normalize(slidingPlaneNormal)) * glm::normalize(slidingPlaneNormal);
-			vel -= projection;
+			glm::vec3 projection = glm::dot(ellip.Velocity, glm::normalize(slidingPlaneNormal)) * glm::normalize(slidingPlaneNormal);
+			ellip.Velocity -= projection;
 		}
 		else
 		{
 			collisionTime = 1.0f;
 
-			pos += (vel * (1.0f - totalTimePassed));
+			ellip.Position += (ellip.Velocity * (1.0f - totalTimePassed));
 		}
 
 		totalTimePassed += collisionTime;
@@ -246,6 +257,6 @@ void handleIntersection(const Ellipsoid &ellip, const std::vector<Triangle> &tri
 	}
 
 	// adding gravity and friction to velocity post-calculations
-	vel += glm::vec3(0.0f, -0.001f, 0.0f);
-	vel *= 0.99f;
+	ellip.Velocity += glm::vec3(0.0f, -0.001f, 0.0f);
+	ellip.Velocity *= 0.99f;
 }

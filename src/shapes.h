@@ -25,11 +25,10 @@ class Triangle
 		Triangle(glm::vec3, glm::vec3, glm::vec3);
 		Triangle(glm::vec3, glm::vec3, glm::vec3, glm::vec3);
 
-		void Print();
+		void Print() const;
 };
 
 // Ellipsoid class. Used for objects which collide with level geometry
-// TODO: Currently treated as a sphere. Will change that at some point
 class Ellipsoid
 {
 	public:
@@ -39,12 +38,12 @@ class Ellipsoid
 
 		Ellipsoid(glm::vec3, glm::vec3, glm::vec3);
 
-		void Print();
+		void Print() const;
 
-		glm::vec3 toEllipSpace(const glm::vec3&);
-		glm::vec3 fromEllipSpace(const glm::vec3&);
-		Triangle toEllipSpace(const Triangle&);
-		Triangle fromEllipSpace(const Triangle&);
+		glm::vec3 toEllipSpace(const glm::vec3&) const;
+		glm::vec3 fromEllipSpace(const glm::vec3&) const;
+		Triangle toEllipSpace(const Triangle&) const;
+		Triangle fromEllipSpace(const Triangle&) const;
 };
 
 #endif

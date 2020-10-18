@@ -254,6 +254,8 @@ void handleIntersection(Ellipsoid &ellip, const std::vector<Triangle> &tris)
 
 		if (++passes >= 3)
 			break; // prevents hard-locking
+		if (glm::length(ellip.Velocity) < EPSILON)
+			break;
 	}
 
 	// adding gravity and friction to velocity post-calculations

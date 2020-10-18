@@ -91,13 +91,8 @@ int main()
 
 	std::vector<Triangle> tris = ourModel.ToTriangles();
 
-	// another model
-	/*
-	std::string filepath2 = "resources/boxsphere/boxsphere.obj";
-	Model sphereModel(filepath2.c_str());
-	Ellipsoid sphere(1.0f, glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	*/
-	Thing sphere(glm::vec3(0.0f, 10.0f, -5.0f), glm::vec3(0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.4f, 0.4f, 0.4f), "resources/boxsphere/boxsphere.obj", "testsphere");
+	// the sphere thing
+	Thing sphere(glm::vec3(0.0f, 10.0f, -5.0f), glm::vec3(0.0f), glm::vec3(2.5f), glm::vec3(1.0f), "resources/boxsphere/boxsphere.obj", "testsphere");
 
 	// the text
 	Text sampleText("hello there, world!", SCR_WIDTH, SCR_HEIGHT, 30, 30, 400, 20, 5);

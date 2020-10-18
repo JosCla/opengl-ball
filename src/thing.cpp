@@ -59,3 +59,8 @@ void Thing::RenderThing(Camera &camera, Shader &shader, int SCR_WIDTH, int SCR_H
 
 	ThingModel.Draw(shader);
 }
+
+// Prints the thing
+void Thing::Print() const {
+	cout << "Thing " << Name << ": Position (" << Position.x << ", " << Position.y << ", " << Position.z << ")" << endl;
+}

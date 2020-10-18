@@ -1,10 +1,13 @@
 collision.cpp:
 (done) compute intersection between ellipsoid and single triangle, return collision bool, modify references to position and time
-(done) compute intersection between ellipsoid and many triangles, modify references to position and velocity
+(done) compute intersection between ellipsoid and many triangles, modify position and velocity
+compute intersection between two ellipsoids, modify position and velocity
+for ellipsoid collisions (with other ellipsoids or with triangles), modify rotational values
 
 shapes.cpp:
 (done) ellipsoid no longer has passframe stuff, just stores radii, maybe a print function
-ellipsoid should also have some function for transforming coordinates to ellipsoid-space
+(done) ellipsoid should also have some function for transforming coordinates to ellipsoid-space
+ellipsoid should also have rotation about various axes
 (done) same with triangle, but it never had passframe stuff in the first place
 
 thing.cpp:
@@ -16,7 +19,8 @@ anyways, each Thing has:
 (done) render thing: model, maybe function tied to model
 (done) pass frame: some function which passes that good frame
 (done) name?: maybe the name of the object
-print?: some sorta print function perhaps
+(done) print?: some sorta print function perhaps
+ai?: some "ai" values that can be modified and used
 
 player.cpp (future stuff):
 has Player class which has:

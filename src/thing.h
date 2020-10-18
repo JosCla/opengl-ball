@@ -31,6 +31,8 @@ class Thing {
 
 		void PassFrame(std::vector<Triangle>&);
 		void RenderThing(Camera&, Shader&, int, int);
+		
+		void Print() const;
 };
 
 #endif

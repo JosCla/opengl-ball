@@ -135,7 +135,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &triangle, float
 			if (solveQuadrat(a, b, c, r0, r1))
 			{
 				double time = std::min(r0, r1);
-				if (time < 0 && time >= -0.01)
+				if (time < 0 && time >= -0.05)
 					time = 0; // helps mitigate false negatives from calculation imprecision 
 
 				if (time >= 0 && time < collisionTime)
@@ -169,7 +169,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &triangle, float
 			if (solveQuadrat(a, b, c, r0, r1))
 			{
 				double time = std::min(r0, r1);
-				if (time < 0 && time >= -0.01)
+				if (time < 0 && time >= -0.05)
 					time = 0; // helps mitigate false negatives from calculation imprecision 
 				
 				double relativePosOnEdge = ((float)time * glm::dot(currEdge, vel) - glm::dot(currEdge, posToVertex)) / std::pow(glm::length(currEdge), 2);
@@ -191,7 +191,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &triangle, float
 
 	if (collision) {
 		slidingPlaneNormal = (pos + (vel * collisionTime)) - collisionPoint; 
-		slidingPlaneNormal = ellip.fromEllipSpace(slidingPlaneNormal);
+		slidingPlaneNormal = ellip.toEllipSpace(slidingPlaneNormal);
 	}
 
 	return collision;
@@ -225,7 +225,7 @@ void handleIntersection(Ellipsoid &ellip, const std::vector<Triangle> &tris)
 			{
 				// the second part of the following if-statement makes sure that the ellipsoid
 				// will not get stuck repeatedly colliding with something at time = 0
-				if (currCollisionTime < collisionTime && std::abs(glm::dot(ellip.Velocity, currSlidingPlane)) > EPSILON)
+				if (currCollisionTime < collisionTime && glm::dot(ellip.Velocity, currSlidingPlane) < 0.0f)
 				{
 					collision = true;
 					collisionTime = currCollisionTime;
@@ -242,6 +242,8 @@ void handleIntersection(Ellipsoid &ellip, const std::vector<Triangle> &tris)
 
 			glm::vec3 projection = glm::dot(ellip.Velocity, glm::normalize(slidingPlaneNormal)) * glm::normalize(slidingPlaneNormal);
 			ellip.Velocity -= projection;
+
+			std::cout << "Sliding plane: " << slidingPlaneNormal.x << ", " << slidingPlaneNormal.y << ", " << slidingPlaneNormal.z << std::endl;
 		}
 		else
 		{

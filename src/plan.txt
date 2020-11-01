@@ -3,6 +3,7 @@ collision.cpp:
 (done) compute intersection between ellipsoid and many triangles, modify position and velocity
 compute intersection between two ellipsoids, modify position and velocity
 for ellipsoid collisions (with other ellipsoids or with triangles), modify rotational values
+make an octree, or just in general something that can reduce the number of collisions to compute
 
 shapes.cpp:
 (done) ellipsoid no longer has passframe stuff, just stores radii, maybe a print function
@@ -21,6 +22,12 @@ anyways, each Thing has:
 (done) name?: maybe the name of the object
 (done) print?: some sorta print function perhaps
 ai?: some "ai" values that can be modified and used
+
+model.cpp:
+test multiple textures, make sure that works
+make another map in blender, make sure that works too
+remake the boxsphere, maybe with another texture, definitely with unit sphere proportions
+make a skybox, maybe just some nice clear summer sky thing
 
 player.cpp (future stuff):
 has Player class which has:

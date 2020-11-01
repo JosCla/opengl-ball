@@ -20,6 +20,7 @@
 #include "src/shapes.h" // defines Shape classes
 #include "src/collision.h" // defines some collision functions
 #include "src/thing.h" // defines the Thing class
+#include "src/octree.h" // defines the Octree class
 
 // declaring some global variables before main
 Camera camera(glm::vec3(-2.0, 1.0, -2.0), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f);
@@ -168,7 +169,7 @@ int main()
 		objectShader.setMat4("projection", projection);
 
     // background
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// drawing environment

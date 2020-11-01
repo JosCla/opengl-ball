@@ -192,6 +192,7 @@ bool computeIntersection(const Ellipsoid &ellip, const Triangle &triangle, float
 	if (collision) {
 		slidingPlaneNormal = (pos + (vel * collisionTime)) - collisionPoint; 
 		slidingPlaneNormal = ellip.toEllipSpace(slidingPlaneNormal);
+		slidingPlaneNormal = glm::normalize(slidingPlaneNormal);
 	}
 
 	return collision;
@@ -242,8 +243,6 @@ void handleIntersection(Ellipsoid &ellip, const std::vector<Triangle> &tris)
 
 			glm::vec3 projection = glm::dot(ellip.Velocity, glm::normalize(slidingPlaneNormal)) * glm::normalize(slidingPlaneNormal);
 			ellip.Velocity -= projection;
-
-			std::cout << "Sliding plane: " << slidingPlaneNormal.x << ", " << slidingPlaneNormal.y << ", " << slidingPlaneNormal.z << std::endl;
 		}
 		else
 		{

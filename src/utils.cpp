@@ -4,8 +4,8 @@
 #include <glad/glad.h> // for opengl flags
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image.h> // for image processing
-#include <stb_image_write.h> // for screenshotting
+#include <stb/stb_image.h> // for image processing
+#include <stb/stb_image_write.h> // for screenshotting
 #include <glm/glm.hpp> // gl maths
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

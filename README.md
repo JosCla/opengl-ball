@@ -1,5 +1,5 @@
 # OpenGL Ball
-A simple demonstration of ball physics in OpenGL, in an interactive environment.
+A simple demonstration of ball physics in OpenGL, in an interactive environment. Move around and push an ellipsoid that collides with the environment!
 
 I originally built this project in Summer of 2020 to learn and practice C++, Linux, and a bit of Blender, too.
 
@@ -8,7 +8,7 @@ If you look in the screenshots folder, you can see screenshots I took while deve
 ## Building the Project
 Navigate to the root of the project, and run `make`.
 
-This project uses OpenGL, GLFW, GLAD, and GLM.
+This project uses OpenGL, GLFW, GLAD, STB_IMAGE, and GLM.
 
 ## Usage
 After building the project, run the project with `./main`.
